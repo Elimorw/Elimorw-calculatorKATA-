@@ -6,26 +6,18 @@ class Main {
 
 
     public static void main(String[] args) {
-        boolean stop = true;
-        while (stop) {
+        while (true) {
             System.out.println("Input: ");
             String exp = sc.nextLine();
             String outt = calc(exp);
 
-            if (Objects.equals(exp, "stop")) {
+            if (Objects.equals(exp, "stop") || Objects.equals(outt, "stop")) {
                 break;
-            } else if (!outt.equals("Вы вели более двух операндов!  Допустимо только 1.") && !outt.equals("Числа должны быть в диапазоне от 1 до 10 включительно") &&
-                       !outt.equals("Числа должны быть в одном формате") && !outt.equals("Числа должны быть целыми") && !outt.equals("Неверный знак!!!")) {
-                System.out.println("Output:\n" + outt);
-            }else{
-                System.out.println(outt);
-                stop = false;
-            }
+            }else System.out.println(outt);
 
         }
 
     }
-
 
 
     public static String calc(String input) {
@@ -33,6 +25,7 @@ class Main {
 
         String[] act = {"+", "-", "/", "*"};
         String[] regAct = {"\\+", "-", "/", "\\*"};
+        boolean stop = true;
 
             // Ищим индекс для знака
             int actIndex = 0;
@@ -45,17 +38,16 @@ class Main {
                 }
             }
             if (!fl) {
-                return "Неверный знак!!!";
+                System.out.println("Неверный знак!!!");
+                return "stop";
             }
-
-            // Вход в обработку исключений
+                // Вход в обработку исключений
             try {
-
                 // Разделяем по знаку, !!!метод работает только с регуляркой!!!
                 String[] dt = input.split(regAct[actIndex]);
-                if(dt.length > 2) {
-                    return ("Вы вели более двух операндов!  Допустимо только 1.");
-
+                if (dt.length > 2) {
+                    System.out.println("Вы вели более двух операндов!  Допустимо только 1.");
+                    return "stop";
                 }
 
                 if (converter.isRoman(dt[0]) == converter.isRoman(dt[1])) {
@@ -71,10 +63,11 @@ class Main {
                         x = Integer.parseInt(dt[0]);
                         y = Integer.parseInt(dt[1]);
                     }
-                    if((x >= 1 && x <= 10) && (y >= 1 && y<=10)){
+                    if ((x >= 1 && x <= 10) && (y >= 1 && y <= 10)) {
                         System.out.println("Output:");
-                    }else {
-                        return ("Числа должны быть в диапазоне от 1 до 10 включительно");
+                    } else {
+                        System.out.println("Числа должны быть в диапазоне от 1 до 10 включительно");
+                        return "stop";
                     }
                     int result = switch (actIndex) {
                         case 0 -> x + y;
@@ -86,19 +79,25 @@ class Main {
 
                     if (isRoman) {
                         return converter.intToRoman(result);
-                    // Вывод значения в арабских числах
+                        // Вывод значения в арабских числах
                     } else {
                         return String.valueOf(result);
 
                     }
                 } else {
-                    return "Числа должны быть в одном формате" ;
+                    System.out.println("Числа должны быть в одном формате");
+                    return "stop";
                 }
                 // Обработка ошибки если число не целое
-            } catch (NumberFormatException e){
-                return "Числа должны быть целыми";
+            } catch (NumberFormatException e) {
+                System.out.println("Числа должны быть целыми");
+                return "stop";
             }
     }
 
 }
+
+
+
+
 
